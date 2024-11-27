@@ -10,66 +10,48 @@ class UniversalInstaller:
     def __init__(self, master):
         self.master = master
         master.title("Универсальный Инсталлятор")
-        
-        # Установка фиксированного размера окна
         master.geometry("400x600")
-        master.resizable(False, False)  # Запрет на изменение размера окна
 
-        # Фон
-        self.background_image_path = "photo.gif"  # Путь к изображению фона (изменено на GIF)
-        self.background_label = tk.Label(master)
-        self.background_label.place(relwidth=1, relheight=1)
-
+        
         # Стиль
         style = ttk.Style()
         style.configure("TButton", padding=6)
         style.configure("TLabel", padding=6)
         style.configure("TEntry", padding=6)
-        style.configure("TCheckbutton", padding=6)
 
         # Заголовок
-        self.title_label = ttk.Label(master, text="Универсальный Инсталлятор", font=("Arial", 16), background="#f0f0f0")
+        self.title_label = ttk.Label(master, text="Универсальный Инсталлятор", font=("Arial", 16))
         self.title_label.pack(pady=(10, 20))
 
         # Выбор файла
-        self.label = ttk.Label(master, text="Выберите файл для установки:", background="#f0f0f0")
+        self.label = ttk.Label(master, text="Выберите файл для установки:")
         self.label.pack(pady=(10, 5))
 
-        self.file_frame = ttk.Frame(master, borderwidth=2, relief="solid")
-        self.file_frame.pack(pady=(0, 10), padx=10, fill='x')
+        self.file_entry = ttk.Entry(master, width=60)
+        self.file_entry.pack(pady=(0, 10))
 
-        self.file_entry = ttk.Entry(self.file_frame, width=50)
-        self.file_entry.pack(side=tk.LEFT, fill='x', padx=(5, 0))
-
-        # Кликабельная метка для выбора файла
-        self.file_label = ttk.Label(self.file_frame, text="Обзор", foreground="blue", cursor="hand2")
-        self.file_label.pack(side=tk.RIGHT, padx=(5, 5))
-        self.file_label.bind("<Button-1>", lambda e: self.browse_file())  # Привязка клика к функции
+        self.browse_button = ttk.Button(master, text="Обзор", command=self.browse_file)
+        self.browse_button.pack(pady=(0, 10))
 
         # Выбор директории
-        self.label_dir = ttk.Label(master, text="Выберите директорию для установки:", background="#f0f0f0")
+        self.label_dir = ttk.Label(master, text="Выберите директорию для установки:")
         self.label_dir.pack(pady=(10, 5))
 
-        self.dir_frame = ttk.Frame(master, borderwidth=2, relief="solid")
-        self.dir_frame.pack(pady=(0, 10), padx=10, fill='x')
+        self.dir_entry = ttk.Entry(master, width=60)
+        self.dir_entry.pack(pady=(0, 10))
 
-        self.dir_entry = ttk.Entry(self.dir_frame, width=50)
-        self.dir_entry.pack(side=tk.LEFT, fill='x', padx=(5, 0))
-
-        # Кликабельная метка для выбора директории
-        self.dir_label = ttk.Label(self.dir_frame, text="Обзор", foreground="blue", cursor="hand2")
-        self.dir_label.pack(side=tk.RIGHT, padx=(5, 5))
-        self.dir_label.bind("<Button-1>", lambda e: self.browse_directory())  # Привязка клика к функции
+        self.browse_dir_button = ttk.Button(master, text="Обзор", command=self.browse_directory)
+        self.browse_dir_button.pack(pady=(0, 10))
 
         # Кнопка установки
         self.install_button = ttk.Button(master, text="Установить", command=self.install)
         self.install_button.pack(pady=(10, 5))
 
         # Статус
-        self.status_label = ttk.Label(master, text="", font=("Arial", 10), background="#f0f0f0")
+        self.status_label = ttk.Label(master, text="", font=("Arial", 10))
         self.status_label.pack(pady=(10, 5))
 
-        self.progress = ttk.Progressbar(master, orient="horizontal", length=350, mode="determinate")
+        self.progress = ttk.Progressbar(master, orient="horizontal", length=400, mode="determinate")
         self.progress.pack(pady=(10, 5))
 
         # Создание ярлыка
@@ -86,38 +68,18 @@ class UniversalInstaller:
         self.preview_button.pack(pady=(10, 5))
 
         # Список содержимого архива
-        self.content_listbox = tk.Listbox(master, width=60, height=10)
+        self.content_listbox = tk.Listbox(master, width=70, height=10)
         self.content_listbox.pack(pady=(10, 10))
 
-        # Загрузка фона
-        self.load_background()
-
-    def load_background(self):
-        if os.path.exists(self.background_image_path):
-            # Загрузка изображения
-            self.bg_image = tk.PhotoImage(file=self.background_image_path)
-            self.background_label.config(image=self.bg_image)
-        else:
-            messagebox.showerror("Ошибка", f"Файл фона '{self.background_image_path}' не найден.")
-
     def browse_file(self):
-        file_path = filedialog.askopenfilename(
-            title="Выберите файл для установки",
-            filetypes=[
-                ("ZIP files", "*.zip"),
-                ("TAR files", "*.tar.gz"),
-                ("Все файлы", "*.*")
-            ]
-        )
-        if file_path:  # Проверка, был ли выбран файл
-            self.file_entry.delete(0, tk.END)
-            self.file_entry.insert(0, file_path)
+        file_path = filedialog.askopenfilename(filetypes=[("ZIP files", "*.zip"), ("TAR files", "*.tar.gz"), ("All files", "*.*")])
+        self.file_entry.delete(0, tk.END)
+        self.file_entry.insert(0, file_path)
 
     def browse_directory(self):
-        dir_path = filedialog.askdirectory(title="Выберите директорию для установки")
-        if dir_path:  # Проверка, была ли выбрана директория
-            self.dir_entry.delete(0, tk.END)
-            self.dir_entry.insert(0, dir_path)
+        dir_path = filedialog.askdirectory()
+        self.dir_entry.delete(0, tk.END)
+        self.dir_entry.insert(0, dir_path)
 
     def preview_content(self):
         archive_file = self.file_entry.get()
