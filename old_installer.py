@@ -10,7 +10,7 @@ class UniversalInstaller:
     def __init__(self, master):
         self.master = master
         master.title("Универсальный Инсталлятор")
-        master.geometry("400x600")
+        master.geometry("400x700")
 
         
         # Стиль
