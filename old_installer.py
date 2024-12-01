@@ -24,7 +24,7 @@ class UniversalInstaller:
         self.title_label.pack(pady=(10, 20))
 
         # Выбор файла
-        self.label = ttk.Label(master, text="Выберите файл для установки:")
+        self.label = ttk.Label(master, text="Выберите архив с исходным кодом:")
         self.label.pack(pady=(10, 5))
 
         self.file_entry = ttk.Entry(master, width=60)
