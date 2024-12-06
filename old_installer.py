@@ -59,10 +59,6 @@ class UniversalInstaller:
         self.shortcut_check = ttk.Checkbutton(master, text="Создать ярлык на рабочем столе", variable=self.create_shortcut_var)
         self.shortcut_check.pack(pady=(10, 5))
 
-        # Кнопка удаления
-        self.remove_button = ttk.Button(master, text="Удалить установленную программу", command=self.remove)
-        self.remove_button.pack(pady=(10, 5))
-
         # Кнопка предварительного просмотра
         self.preview_button = ttk.Button(master, text="Предварительный просмотр содержимого", command=self.preview_content)
         self.preview_button.pack(pady=(10, 5))
@@ -177,12 +173,6 @@ Terminal=false
             uninstall_script_path = os.path.join(target_dir, "uninstall.bat")
             with open(uninstall_script_path, 'w') as f:
                 f.write(f"@echo off\nrmdir /s /q \"{target_dir}\"\necho Программа удалена.\n")
-
-    def remove(self):
-        target_dir = self.dir_entry.get()
-        if not target_dir:
-            messagebox.showerror("Ошибка", "Пожалуйста, выберите директорию для удаления.")
-            return
 
         if not os.path.exists(target_dir):
             messagebox.showerror("Ошибка", "Указанная директория не существует.")
